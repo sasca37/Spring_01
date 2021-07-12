@@ -4,6 +4,12 @@ IntelliJ 단축키 모음
 - shift + f6 : 한번에 같은 단어 변경 
 - ctrl + shift + t : 자동 테스트 패키지, 클래스, 메서드 생성 
 - shift + f10 : 이전에 실행한걸 그대로 실행 
+- psvm : main 메소드 자동생성 
+- ctrl + d : 라인복제 
+- ctrl (or) alt + shift + ↑ / ↓ : 라인 이동 (구문 안에서만, 구문무시) 
+- ctrl + alt + f10 : 마지막 실행 재실행 
+- ctrl + alt + <- / -> : 이전 커서가 있던 화면으로 이동 
+- 
 인터페이스 모음 
 HashMap : Map 인터페이스의 대표적인 컬렉션. Map은 <key,value> 구조이며  key는 중복될 수 없다. 중복시 기존 키 사라진다 
 -> 해싱을 사용하기 때문에 많은 양의 데이터를 검색하는데 효율이 좋다. 
@@ -52,13 +58,14 @@ assertThat(member).isEqualTo(result);
 서비스 입장에서는 외부에서 memberRepository를 넣어줌 -> 이것을 DI 라고함 
 memberService = new MemberService(memberRepository);
 DI (필드, 세터, 생성자 3가지가 있지만 동적으로 변하는 경우가 거의 없기 때문에 생성자 주입을 권장) 
+  
 - 테스트 3단계 
   given : 뭔가 주어졌을 때 
   when : 이걸 실행했을 때
   then : 결과가 이게 나와야 돼 
   
 -------------------------
-보통 정형화된 컨트롤러, 서비스, 레포지토리는 컴포넌트 스캔 방식
+보통 정형화된(일반적인) 컨트롤러, 서비스, 레포지토리는 컴포넌트 스캔 방식
 정형화 되지 않거나, 상황에 따라 구현클래스를 변경해야 하면 설정을 통해 스프링 빈등록 ( 해당 프로젝트는 데이터 채택이안된 경우이므로 이 경우를 선택) 
   
  < 컴포넌트 스캔 방식 >
@@ -78,3 +85,36 @@ memberController -> memberService -> memberRepository : 연결 완료
 @Configuration , @Bean 을 통해 직접 빈등록 할 수 있다. 
    
    
+---------- H2 DB --------------
+데이터베이스 파일 생성 방법
+jdbc:h2:~/test (최초 한번)
+~/test.mv.db 파일 생성 확인
+이후부터는 jdbc:h2:tcp://localhost/~/test 이렇게 접속
+   
+cd C:\Program Files (x86)\H2\bin (h2.bat 실행 위치) 
+netstat -ano (실행중인 프로세스  pid 위치)
+taskkill /pid 12324 /f (프로세스 강제 종료)
+
+ <ORM 기술 과정>
+ Jdbc -> JdbcTemplate -> Jpa -> Spring Jpa 
+   
+ Jdbc : Datasource (import javax.sql.DataSource) 와 Connection 등을 사용하여 연결 , 예외 처리문이 많고 코드가 복잡하다. 
+   -> 쿼리 ex) String sql = "select * from member where name = ?";
+  
+ JdbcTemplate : JdbcTemplate (import org.springframework.jdbc.core.JdbcTemplate) 를 사용하여 기존 예외처리가 없어지고 간결해진다. 쿼리 동일 
+ 
+ Jpa : EntityManager (import javax.persistence.EntityManager) 와 생성자 DI를 통해 사용하며 개발자가 생성한 Repository를 implements 하여 개발
+   -> 쿼리 ex)  List<Member> result = em.createQuery("select m from Member m where m.name = :name", Member.class)
+ 
+ Data Jpa : 인터페이스로 생성 후에 JpaRepository를 추가로 JpaRepository를 extends 한다. <객체클래스, 키 값> , Repository 
+   -> JpaRepository에서 제고아는 CRUD를 사용하여 구현 가능하기 때문에 로직이 간단하다.
+   -> 실무에서는 복잡한 쿼리는 Jpa에서 제공하는 네이티브 쿼리를 사용하거나 JdbcTemplate을 혼합하여 사용한다.
+   
+   
+AOP: Aspect Oriented Programming (관점 지향 프로그래밍) 
+AOP가 필요한 상황 
+- 메소드의 호출 시간 측정 , 공통 관심사항 VS 핵심 관심사항 분리 
+
+ <스프링 컨테이너 구조> 
+ Controller -> Service -> Repository
+  --------- 시간 측정 로직 --------
