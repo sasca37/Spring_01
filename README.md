@@ -1,4 +1,7 @@
 IntelliJ 단축키 모음 
+- alt + enter : 클래스에서 테스트 만들기 
+- alt + insert : 메서드 테스트 만들기 
+- ctrl + alt + m : DI 생성자 따로 바깥으로 리팩토링 
 - ctrl + e : 클래스 히스토리 내역을 볼 수 있음 
 - ctrl + alt + v : 반환값 자동 생성 
 - ctrl + alt + shift + t : 리팩토링 
