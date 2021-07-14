@@ -1,4 +1,5 @@
 IntelliJ 단축키 모음 
+- ctrl + b (클래스) : 연관된 클래스 목록보기
 - alt + enter : 클래스에서 테스트 만들기 
 - alt + insert : 메서드 테스트 만들기 
 - ctrl + alt + m : DI 생성자 따로 바깥으로 리팩토링 
